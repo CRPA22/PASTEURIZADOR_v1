@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Datos Pasteurizadora</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+<div class="container">
+    <h1>Datos Pasteurizadora</h1>
+
+    <div class="filters">
+        <label>Desde:
+            <input type="datetime-local" id="from">
+        </label>
+        <label>Hasta:
+            <input type="datetime-local" id="to">
+        </label>
+        <button onclick="filtrarDatos()">Filtrar</button>
+        <button onclick="descargarCSV()">Descargar CSV</button>
+    </div>
+
+    <div id="message"></div>
+
+    <h2>Temperaturas</h2>
+    <canvas id="chartTemp" height="150"></canvas>
+
+    <h2>Flujo</h2>
+    <canvas id="chartFlujo" height="150"></canvas>
+</div>
+
+<script src="/static/main.js"></script>
+</body>
+</html>
