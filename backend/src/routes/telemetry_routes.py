@@ -6,7 +6,7 @@ telemetry_bp = Blueprint("telemetry", __name__)
 
 @telemetry_bp.route("/", methods=["GET"])
 def dashboard():
-    return render_template("dashboard.html")
+    return render_template("index.html")
 
 @telemetry_bp.route("/api/all", methods=["GET"])
 def all_data():

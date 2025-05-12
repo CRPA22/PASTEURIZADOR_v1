@@ -1,67 +1,142 @@
+/* Estilos generales para el body */
 body {
     font-family: Arial, sans-serif;
-    padding: 0;
-    background: #f8f9fa;
+    margin: 0;
+    padding: 20px;
+    background-color: #f5f7fa; /* Fondo gris claro para el dashboard */
 }
 
-.cards {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-bottom: 1rem;
-    flex-wrap: wrap;
-    gap: 1rem;
+/* Contenedor principal con ancho máximo y centrado */
+.container {
+    max-width: 1200px;
+    margin: 0 auto; /* Centra horizontalmente */
 }
 
+/* Estilo para el encabezado del dashboard */
+.header {
+    background-color: #1a237e; /* Azul oscuro */
+    color: white;
+    padding: 20px;
+    text-align: center;
+    margin-bottom: 20px;
+    border-radius: 5px; /* Bordes redondeados */
+}
+
+/* Estilo para las tarjetas que contienen secciones del dashboard */
 .card {
-    display: flex;
-    width: 250px;
-    height: 130px;
-    border-radius: 25px;
-    background: whitesmoke;
-    color: black;
-    z-index: 2;
-    transition: .4s ease-in-out;
-    font-size: x-large;
+    background-color: white;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Sombra sutil */
+    padding: 20px;
+    margin-bottom: 20px;
 }
 
-#app {
-    max-width: 1000px;
-    margin: auto;
-}
-
-#filters {
+/* Estilo para el encabezado de las tarjetas con flex para alinear título y acciones */
+.card-header {
     display: flex;
+    justify-content: space-between; /* Título a la izquierda, acciones a la derecha */
     align-items: center;
-    justify-content: center;
-    gap: 1rem;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+}
+
+/* Cuadrícula responsiva para los valores de sensores */
+.values-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); /* Columnas responsivas */
+    gap: 20px;
+}
+
+/* Estilo para las tarjetas individuales de valores */
+.value-card {
+    text-align: center;
+    padding: 15px;
+    background-color: #f8f9fa; /* Gris más claro que el fondo */
+    border-radius: 5px;
+}
+
+/* Estilo para el valor numérico de los sensores */
+.value {
+    font-size: 36px; /* Tamaño grande para destacar */
+    font-weight: bold;
+    margin: 10px 0;
+}
+
+/* Estilo para el texto de última actualización */
+.last-update {
+    font-size: 14px;
+    color: #666; /* Gris oscuro */
+    text-align: right;
+}
+
+/* Estilo para los botones */
+button {
+    background-color: #1a237e; /* Azul oscuro, igual que el header */
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease; /* Transición suave al hover */
+}
+
+/* Efecto hover para los botones */
+button:hover {
+    background-color: #303f9f; /* Azul más claro al pasar el mouse */
+}
+
+/* Contenedor para el gráfico con altura fija */
+.chart-container {
+    position: relative;
+    height: 400px; /* Altura fija para el gráfico */
+    width: 100%;
+    margin-top: 20px;
+}
+
+/* Estilos para la sección de filtros */
+.filter-section {
+    background-color: #f8f9fa;
+    border-radius: 5px;
+    padding: 15px;
+    margin-bottom: 20px;
+}
+
+.filter-row {
+    display: flex;
     flex-wrap: wrap;
-    margin-bottom: 10px;
+    gap: 15px;
+    align-items: flex-end;
 }
 
-.filters label {
-    font-size: 14px;
-}
-
-.filters input {
-    padding: 3px 6px;
-    font-size: 14px;
-}
-
-.filters button {
-    padding: 5px 10px;
-    font-size: 14px;
-}
-
-label {
+.filter-group {
     display: flex;
     flex-direction: column;
-    font-size: 0.9rem;
+    min-width: 180px;
 }
 
-canvas {
-    background-color: white;
-    padding: 1rem;
-    border-radius: 8px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+.filter-group label {
+    font-size: 0.9rem;
+    margin-bottom: 5px;
+    color: #555;
 }
+
+.filter-group input, 
+.filter-group select {
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 1rem;
+}
+
+.filter-actions {
+    display: flex;
+    gap: 10px;
+}
+
+/* Botón secundario con estilo diferente */
+.btn-secondary {
+    background-color: #6c757d;
+    color: white;
+}
+

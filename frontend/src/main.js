@@ -4,18 +4,6 @@ import { appendTelemetryPoint, renderTelemetryChart } from './charts/telemetryCh
 
 
 
-// Insertamos el HTML de filtros
-document.getElementById('app').innerHTML = `
-    <div id="filters">
-        <label>Desde: <input type="datetime-local" id="fromDate"></label>
-        <label>Hasta: <input type="datetime-local" id="toDate"></label>
-        <button id="filterBtn">Filtrar</button>
-        <button id="downloadBtn">Descargar CSV</button>
-    </div>
-    <div id="currentValues" class="cards"></div>
-    <div id="chartContainer"></div>
-`;
-
 document.addEventListener('DOMContentLoaded', async () => {
     let fullData = await fetchTelemetryData(); // data global
     let filteredData = null; // null = no filtro activo
@@ -83,12 +71,15 @@ function downloadCSV(data) {
 }
 
 function renderCurrentValues(dataPoint) {
-    const container = document.getElementById('currentValues');
+    
+    const temp1 = document.getElementById('temp1_realtime');
+    const temp2 = document.getElementById('temp2_realtime');
+    const temp3 = document.getElementById('temp3_realtime');
+    const flujo = document.getElementById('flujo_realtime');
 
-    container.innerHTML= `
-    <div class = "card">Temp1: ${dataPoint.temp1} °C</div>
-    <div class = "card">Temp2: ${dataPoint.temp2} °C</div>
-    <div class = "card">Temp3: ${dataPoint.temp3} °C</div>
-    <div class = "card">Flujo: ${dataPoint.flujo} L/min</div>
-    `
+    temp1.textContent = dataPoint.temp1.toFixed(1);
+    temp2.textContent = dataPoint.temp2.toFixed(1);
+    temp3.textContent = dataPoint.temp3.toFixed(1);
+    flujo.textContent = dataPoint.flujo.toFixed(1);
+
 }

@@ -3,10 +3,83 @@
 <html lang="en">
     <head>
         <meta charset="UTF-8" />
-        <title>Vite Dev</title>
+        <title>Ovasur-Pasteurizador</title>
     </head>
     <body>
-        <div id="app"></div>
-        <script type="module" src="/src/main.js"></script>
+        <div class="container">
+            <!-- Encabezado de la pagina -->
+            <div class="header">
+                <h1>Dashboard de Monitorización Industrial</h1>
+            </div>
+            
+            <!-- Tarjeta para valores actuales -->
+            <div class="card">
+                <!-- Puede mostrar la hora - FALTA DECIDIR -->
+                <div class="card-header">
+                    <h2>Valores Actuales</h2>
+                    <div>
+                        <span class="last-update">Última actualización:</span>
+                    </div>
+                </div>
+                <!-- Cuadricula para mostrar valores -->
+                <div class="values-grid">
+                    <!-- Valor actual de Temperatura 1 -->
+                    <div class="value-card">
+                        <h3>Temperatura 1</h3>
+                        <!-- Elemento con id temp1 -->
+                        <div class="value" id="temp1_realtime">--</div>
+                        <div>°C</div>
+                    </div>
+                    <!-- Valor actual de Temperatura 2 -->
+                    <div class="value-card">
+                        <h3>Temperatura 2</h3>
+                        <!-- Elemento con id temp2 -->
+                        <div class="value" id="temp2_realtime">--</div>
+                        <div>°C</div>
+                    </div>
+                    <!-- Valor actual de Temperatura 3 -->
+                    <div class="value-card">
+                        <h3>Temperatura 3</h3>
+                        <!-- Elemento con id temp3 -->
+                        <div class="value" id="temp3_realtime">--</div>
+                        <div>°C</div>
+                    </div>
+                    <!-- Valor actual del Flujo -->
+                    <div class="value-card">
+                        <h3>Flujo</h3>
+                        <!-- Elemento con id flujo -->
+                        <div class="value" id="flujo_realtime">--</div>
+                        <div>°C</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="filter-section">
+                    <div class="filter-row">
+                        <div class="filter-group">
+                            <label for="fromDate">Fecha inicial: </label>
+                            <input type="datetime-local" id="fromDate">
+                        </div>
+                        <div class="filter-group">
+                            <label for="toDate">Fecha final: </label>
+                            <input type="datetime-local" id="toDate">
+                        </div>
+                        <div class="filter-actions">
+                            <button id="filterBtn">Aplicar Filtro</button>
+                            <button id="downloadBtn" class="btn-secondary">Descargar CSV</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                    <div class="chart-container">
+                        <canvas id="chartContainer"></canvas>
+                    </div>
+            </div>
+
+            <script type="module" src="/src/main.js"></script>
+        </div>
     </body>
 </html>
