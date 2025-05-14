@@ -82,4 +82,11 @@ function renderCurrentValues(dataPoint) {
     temp3.textContent = dataPoint.temp3.toFixed(1);
     flujo.textContent = dataPoint.flujo.toFixed(1);
 
+    // Actualizar texto del span last-update
+    const lastUpdate = document.querySelector('.last-update');
+
+    if (lastUpdate) {
+        const date = new Date(dataPoint.timestamp);
+        lastUpdate.textContent = 'Última actualización: ' + date.toLocaleTimeString();
+    }
 }
