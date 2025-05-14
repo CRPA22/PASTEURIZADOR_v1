@@ -45,15 +45,17 @@ document.addEventListener('DOMContentLoaded', async () => {
     setInterval(async () => {
         const newPoint = await fetchLastTelemetryData();
         console.log("Nuevo punto recibido:", newPoint);
+        console.log("Último timestamp:", lastTimestamp);
 
-        if (newPoint.timestamp !== lastTimestamp) {
-        appendTelemetryPoint(newPoint);
-        renderCurrentValues(newPoint);
-        lastTimestamp = newPoint.timestamp;
-        console.log("🟢 Nuevo punto agregado al gráfico.");
-        } else {
-        console.log("🔄 Mismo timestamp, no se actualiza.");
-        }
+        if (newPoint && newPoint.timestamp && newPoint.timestamp !== lastTimestamp) {
+            console.log("🟢 Detectado nuevo punto");
+            appendTelemetryPoint(newPoint);
+            renderCurrentValues(newPoint);
+            lastTimestamp = newPoint.timestamp;
+            console.log("🟢 Nuevo punto agregado al gráfico.");
+            } else {
+            console.log("🔄 Mismo timestamp, no se actualiza.");
+            }
     }, 1000); // cada 1 segundos
 });
 
@@ -77,10 +79,10 @@ function renderCurrentValues(dataPoint) {
     const temp3 = document.getElementById('temp3_realtime');
     const flujo = document.getElementById('flujo_realtime');
 
-    temp1.textContent = dataPoint.temp1.toFixed(1);
-    temp2.textContent = dataPoint.temp2.toFixed(1);
-    temp3.textContent = dataPoint.temp3.toFixed(1);
-    flujo.textContent = dataPoint.flujo.toFixed(1);
+    temp1.textContent = parseFloat(dataPoint.temp1).toFixed(1);
+    temp2.textContent = parseFloat(dataPoint.temp2).toFixed(1);
+    temp3.textContent = parseFloat(dataPoint.temp3).toFixed(1);
+    flujo.textContent = parseFloat(dataPoint.flujo).toFixed(1);
 
     // Actualizar texto del span last-update
     const lastUpdate = document.querySelector('.last-update');
