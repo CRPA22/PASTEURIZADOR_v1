@@ -1,6 +1,7 @@
 import Chart from 'chart.js/auto';
 
-let chartInstance = null;
+let temperatureChartInstance = null;
+let flowChartInstance = null;
 
 export function renderTelemetryChart(data) {
     console.log("Data recibida:", data);
@@ -9,89 +10,170 @@ export function renderTelemetryChart(data) {
         console.error("Error: los datos no son un array.");
         return;
     }
-    const container = document.getElementById('chartContainer').getContext('2d');
 
-    if (chartInstance) {
-        chartInstance.destroy();
+    // Configuración común para las etiquetas de tiempo
+    const timeLabels = data.map(item => {
+        const date = new Date(item.time);
+        date.setHours(date.getHours() - 5); // Ajustar a UTC-5
+        return date.toLocaleTimeString();
+    });
+
+    // Configuración común para las opciones
+    const commonOptions = {
+        responsive: true,
+        maintainAspectRatio: false,
+        animation: false,
+        layout: {
+            padding: {
+                bottom: 20 // Espacio para las etiquetas del eje X
+            }
+        },
+        scales: {
+            x: {
+                title: {
+                    display: true,
+                    text: 'Tiempo'
+                }
+            },
+            y: {
+                title: {
+                    display: true,
+                    text: 'Valor'
+                },
+                beginAtZero: false
+            }
+        },
+        interaction: {
+            mode: 'index',
+            intersect: false
+        }
+    };
+
+    // Configuración común para los datasets
+    const commonDatasetConfig = {
+        pointRadius: 0,
+        pointHoverRadius: 0,
+        borderWidth: 2
+    };
+
+    // Renderizar gráfico de temperaturas
+    const tempContainer = document.getElementById('temperatureChart').getContext('2d');
+    if (temperatureChartInstance) {
+        temperatureChartInstance.destroy();
     }
 
-    chartInstance = new Chart(container, {
+    temperatureChartInstance = new Chart(tempContainer, {
         type: 'line',
         data: {
-        labels: data.map(item => item.timestamp),
-        datasets: [
-            {
-                label: 'Temperatura 1',
-                data: data.map(item => item.temp1),
-                backgroundColor: 'rgba(255, 99, 132, 0.2)', // Rojo transparente
-                borderColor: 'rgba(255, 99, 132, 1)', // Rojo
-                borderWidth: 2
-            },
-            {
-                label: 'Temperatura 2',
-                data: data.map(item => item.temp2),
-                backgroundColor: 'rgba(54, 162, 235, 0.2)', // Azul transparente
-                borderColor: 'rgba(54, 162, 235, 1)', // Azul
-                borderWidth: 2
-            },
-            {
-                label: 'Temperatura 3',
-                data: data.map(item => item.temp3),
-                backgroundColor: 'rgba(255, 206, 86, 0.2)', // Amarillo transparente
-                borderColor: 'rgba(255, 206, 86, 1)', // Amarillo
-                borderWidth: 2
-            },
-            {
-                label: 'Flujo',
-                data: data.map(item => item.flujo),
-                backgroundColor: 'rgba(75, 192, 192, 0.2)', // Verde transparente
-                borderColor: 'rgba(75, 192, 192, 1)', // Verde
-                borderWidth: 2
-            }
-        ]
+            labels: timeLabels,
+            datasets: [
+                {
+                    // Temperatura 1
+                    label: 'TSalProducto',
+                    data: data.map(item => item.temp1),
+                    backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                    borderColor: 'rgba(255, 99, 132, 1)',
+                    ...commonDatasetConfig
+                },
+                {
+                    // Temperatura 2
+                    label: 'TIngRetenedor',
+                    data: data.map(item => item.temp2),
+                    backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    ...commonDatasetConfig
+                },
+                {
+                    // Temperatura 3
+                    label: 'TSalAguaCaliente',
+                    data: data.map(item => item.temp3),
+                    backgroundColor: 'rgba(255, 206, 86, 0.2)',
+                    borderColor: 'rgba(255, 206, 86, 1)',
+                    ...commonDatasetConfig
+                },
+                {
+                    // Temperatura 4
+                    label: 'TSalRetenedor',
+                    data: data.map(item => item.temp4),
+                    backgroundColor: 'rgba(153, 102, 255, 0.2)',
+                    borderColor: 'rgba(153, 102, 255, 1)',
+                    ...commonDatasetConfig
+                }
+            ]
         },
         options: {
-            responsive: true, // Gráfico responsivo
-            maintainAspectRatio: false, // No mantener relación de aspecto
-            animation: false,
+            ...commonOptions,
             scales: {
-                // Configuración del eje X (tiempo)
-                x: {
-                    title: {
-                        display: true,
-                        text: 'Tiempo'
-                    }
-                },
-                // Configuración del eje Y principal (temperaturas)
+                ...commonOptions.scales,
                 y: {
+                    ...commonOptions.scales.y,
                     title: {
                         display: true,
-                        text: 'Mensurandos'
-                    },
-                    beginAtZero: false // El eje no empieza en cero
-                },
-            },
-            interaction: {
-                mode: 'index', // Mostrar todos los valores para un mismo punto en el tiempo
-                intersect: false, // No requerir que el cursor esté exactamente sobre el punto
-            },
+                        text: 'Temperatura (°C)'
+                    }
+                }
+            }
+        }
+    });
+
+    // Renderizar gráfico de flujo
+    const flowContainer = document.getElementById('flowChart').getContext('2d');
+    if (flowChartInstance) {
+        flowChartInstance.destroy();
+    }
+
+    flowChartInstance = new Chart(flowContainer, {
+        type: 'line',
+        data: {
+            labels: timeLabels,
+            datasets: [
+                {
+                    // Flujo
+                    label: 'Flujo',
+                    data: data.map(item => item.flujo1),
+                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    ...commonDatasetConfig
+                }
+            ]
+        },
+        options: {
+            ...commonOptions,
+            scales: {
+                ...commonOptions.scales,
+                y: {
+                    ...commonOptions.scales.y,
+                    title: {
+                        display: true,
+                        text: 'Flujo (L/min)'
+                    }
+                }
+            }
         }
     });
 }
 
-// Funcion para agregar so 1 punto nuevo
+// Función para agregar un punto nuevo
 export function appendTelemetryPoint(dataPoint) {
-    if (!chartInstance){
-        console.warn("chartInstance no inicializado aún.");
+    if (!temperatureChartInstance || !flowChartInstance) {
+        console.warn("Los gráficos no están inicializados aún.");
         return;
-    } 
+    }
 
-    chartInstance.data.labels.push(dataPoint.timestamp);
+    const date = new Date(dataPoint.time);
+    date.setHours(date.getHours() - 5); // Ajustar a UTC-5
+    const timeLabel = date.toLocaleTimeString();
 
-    chartInstance.data.datasets[0].data.push(dataPoint.temp1);
-    chartInstance.data.datasets[1].data.push(dataPoint.temp2);
-    chartInstance.data.datasets[2].data.push(dataPoint.temp3);
-    chartInstance.data.datasets[3].data.push(dataPoint.flujo);
+    // Actualizar gráfico de temperaturas
+    temperatureChartInstance.data.labels.push(timeLabel);
+    temperatureChartInstance.data.datasets[0].data.push(dataPoint.temp1);
+    temperatureChartInstance.data.datasets[1].data.push(dataPoint.temp2);
+    temperatureChartInstance.data.datasets[2].data.push(dataPoint.temp3);
+    temperatureChartInstance.data.datasets[3].data.push(dataPoint.temp4);
+    temperatureChartInstance.update();
 
-    chartInstance.update();
+    // Actualizar gráfico de flujo
+    flowChartInstance.data.labels.push(timeLabel);
+    flowChartInstance.data.datasets[0].data.push(dataPoint.flujo1);
+    flowChartInstance.update();
 }

@@ -9,7 +9,7 @@
         <div class="container">
             <!-- Encabezado de la pagina -->
             <div class="header">
-                <h1>Dashboard de Monitorización Industrial</h1>
+                <h1>PASTEURIZADOR 2</h1>
             </div>
             
             <!-- Tarjeta para valores actuales -->
@@ -25,31 +25,38 @@
                 <div class="values-grid">
                     <!-- Valor actual de Temperatura 1 -->
                     <div class="value-card">
-                        <h3>Temperatura 1</h3>
+                        <h3>TSalProducto</h3>
                         <!-- Elemento con id temp1 -->
                         <div class="value" id="temp1_realtime">--</div>
                         <div>°C</div>
                     </div>
                     <!-- Valor actual de Temperatura 2 -->
                     <div class="value-card">
-                        <h3>Temperatura 2</h3>
+                        <h3>TIngRetenedor</h3>
                         <!-- Elemento con id temp2 -->
                         <div class="value" id="temp2_realtime">--</div>
                         <div>°C</div>
                     </div>
                     <!-- Valor actual de Temperatura 3 -->
                     <div class="value-card">
-                        <h3>Temperatura 3</h3>
+                        <h3>TSalAguaCaliente</h3>
                         <!-- Elemento con id temp3 -->
                         <div class="value" id="temp3_realtime">--</div>
                         <div>°C</div>
                     </div>
-                    <!-- Valor actual del Flujo -->
+                    <!-- Valor actual de Temperatura 4 -->
+                    <div class="value-card">
+                        <h3>TSalRetenedor</h3>
+                        <!-- Elemento con id temp4 -->
+                        <div class="value" id="temp4_realtime">--</div>
+                        <div>°C</div>
+                    </div>
+                    <!-- Valor actual del Flujo 1 -->
                     <div class="value-card">
                         <h3>Flujo</h3>
-                        <!-- Elemento con id flujo -->
-                        <div class="value" id="flujo_realtime">--</div>
-                        <div>°C</div>
+                        <!-- Elemento con id flujo1 -->
+                        <div class="value" id="flujo1_realtime">--</div>
+                        <div>L/m</div>
                     </div>
                 </div>
             </div>
@@ -74,9 +81,32 @@
             </div>
 
             <div class="card">
-                    <div class="chart-container">
-                        <canvas id="chartContainer"></canvas>
+                <div class="tabs">
+                    <button class="tab-button active" data-tab="temperature">Temperaturas</button>
+                    <button class="tab-button" data-tab="flow">Flujo</button>
+                </div>
+                
+                <div class="tab-content">
+                    <div id="temperature-tab" class="tab-pane active">
+                        <div class="chart-container">
+                            <div id="loadingSpinner" class="spinner-container">
+                                <div class="spinner"></div>
+                                <p>Cargando datos...</p>
+                            </div>
+                            <canvas id="temperatureChart"></canvas>
+                        </div>
                     </div>
+                    
+                    <div id="flow-tab" class="tab-pane">
+                        <div class="chart-container">
+                            <div id="loadingSpinnerFlow" class="spinner-container">
+                                <div class="spinner"></div>
+                                <p>Cargando datos...</p>
+                            </div>
+                            <canvas id="flowChart"></canvas>
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <script type="module" src="/src/main.js"></script>

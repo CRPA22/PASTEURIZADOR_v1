@@ -86,12 +86,18 @@ button:hover {
     background-color: #303f9f; /* Azul más claro al pasar el mouse */
 }
 
-/* Contenedor para el gráfico con altura fija */
+/* Estilos para los contenedores de gráficos */
 .chart-container {
     position: relative;
-    height: 400px; /* Altura fija para el gráfico */
+    height: 500px; /* Altura fija para cada gráfico */
     width: 100%;
     margin-top: 20px;
+}
+
+.chart-container h3 {
+    margin: 0 0 10px 0;
+    color: #333;
+    font-size: 1.2em;
 }
 
 /* Estilos para la sección de filtros */
@@ -138,5 +144,82 @@ button:hover {
 .btn-secondary {
     background-color: #6c757d;
     color: white;
+}
+
+/* Estilos para el spinner de carga */
+.spinner-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(255, 255, 255, 0.8);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    display: none; /* Oculto por defecto */
+}
+
+.spinner {
+    width: 50px;
+    height: 50px;
+    border: 5px solid #f3f3f3;
+    border-top: 5px solid #1a237e;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.spinner-container p {
+    margin-top: 10px;
+    color: #1a237e;
+    font-weight: bold;
+}
+
+/* Estilos para las pestañas */
+.tabs {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 10px;
+}
+
+.tab-button {
+    background-color: #f8f9fa;
+    color: #333;
+    border: 1px solid #ddd;
+    padding: 10px 20px;
+    cursor: pointer;
+    border-radius: 4px 4px 0 0;
+    transition: all 0.3s ease;
+}
+
+.tab-button:hover {
+    background-color: #e9ecef;
+}
+
+.tab-button.active {
+    background-color: #1a237e;
+    color: white;
+    border-color: #1a237e;
+}
+
+.tab-content {
+    position: relative;
+}
+
+.tab-pane {
+    display: none;
+}
+
+.tab-pane.active {
+    display: block;
 }
 

@@ -8,8 +8,8 @@ export default defineConfig({
         assetsDir: 'assets',
         rollupOptions: {
             output: {
-                entryFileNames: 'assets/main.js',       // JS principal
-                assetFileNames: 'assets/main.css'       // CSS generado
+                entryFileNames: 'assets/main.js',
+                assetFileNames: 'assets/main.css'
             }
         }
     }
