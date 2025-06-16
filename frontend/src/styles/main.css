@@ -12,14 +12,28 @@ body {
     margin: 0 auto; /* Centra horizontalmente */
 }
 
+.logo {
+    max-width: 250px; /* tamaño máximo del logo */
+    height: auto;
+    margin-bottom: 20px;
+}
+
 /* Estilo para el encabezado del dashboard */
 .header {
-    background-color: #1a237e; /* Azul oscuro */
-    color: white;
-    padding: 20px;
-    text-align: center;
+    background-color: #ECEFF1; /* fondo neutro claro */
+    padding: 10px 20px;
+    display: flex;
+    align-items: center; /* centra verticalmente logo y título */
+    justify-content: center; /* alinea a la izquierda */
     margin-bottom: 20px;
     border-radius: 5px; /* Bordes redondeados */
+    flex-wrap: wrap; /* Permite que el título baje si no hay espacio */
+}
+.title {
+    font-size: 2rem;
+    color: #1f3a70; /* azul del logo */
+    font-weight: 700;
+    margin-left: 15px; /* espacio entre logo y título */
 }
 
 /* Estilo para las tarjetas que contienen secciones del dashboard */
@@ -105,7 +119,6 @@ button:hover {
     background-color: #f8f9fa;
     border-radius: 5px;
     padding: 15px;
-    margin-bottom: 20px;
 }
 
 .filter-row {
