@@ -13,7 +13,7 @@ export async function fetchTelemetryData(fromDate = null, toDate = null) {
             params.append('to', toDate);
         }
 
-        console.log(`${VALUES_URL}?${params}`);
+        //console.log(`${VALUES_URL}?${params}`);
 
         const response = await fetch(`${VALUES_URL}?${params}`);
         

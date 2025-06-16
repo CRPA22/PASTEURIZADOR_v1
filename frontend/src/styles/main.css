@@ -20,7 +20,7 @@ body {
 
 /* Estilo para el encabezado del dashboard */
 .header {
-    background-color: #ECEFF1; /* fondo neutro claro */
+    background-color: #1f3a70; /* fondo neutro claro ECEFF1 */
     padding: 10px 20px;
     display: flex;
     align-items: center; /* centra verticalmente logo y título */
@@ -31,16 +31,16 @@ body {
 }
 .title {
     font-size: 2rem;
-    color: #1f3a70; /* azul del logo */
+    color: white; /* azul del logo */
     font-weight: 700;
     margin-left: 15px; /* espacio entre logo y título */
 }
 
 /* Estilo para las tarjetas que contienen secciones del dashboard */
 .card {
-    background-color: white;
-    border-radius: 5px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Sombra sutil */
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.05);
     padding: 20px;
     margin-bottom: 20px;
 }
@@ -65,16 +65,36 @@ body {
 /* Estilo para las tarjetas individuales de valores */
 .value-card {
     text-align: center;
-    padding: 15px;
-    background-color: #f8f9fa; /* Gris más claro que el fondo */
-    border-radius: 5px;
+    padding: 20px;
+    background: linear-gradient(145deg, #f0f0f0, #e0e0e0); /* sutil gradiente */
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
-/* Estilo para el valor numérico de los sensores */
+.value-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.value-card h3 {
+    font-size: 1.2rem;
+    color: #1a237e;
+    margin-bottom: 8px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    padding-bottom: 5px;
+}
+
 .value {
-    font-size: 36px; /* Tamaño grande para destacar */
+    font-size: 2.5rem;
     font-weight: bold;
+    color: #333;
     margin: 10px 0;
+}
+
+.value-card div:last-child {
+    font-size: 0.9rem;
+    color: #555;
 }
 
 /* Estilo para el texto de última actualización */
@@ -86,18 +106,19 @@ body {
 
 /* Estilo para los botones */
 button {
-    background-color: #1a237e; /* Azul oscuro, igual que el header */
-    color: white;
+    background-color: #1a237e;
+    color: #fff;
     border: none;
-    padding: 10px 15px;
-    border-radius: 4px;
+    padding: 10px 20px;
+    border-radius: 6px;
+    font-weight: bold;
     cursor: pointer;
-    transition: background-color 0.3s ease; /* Transición suave al hover */
+    transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
-/* Efecto hover para los botones */
 button:hover {
-    background-color: #303f9f; /* Azul más claro al pasar el mouse */
+    background-color: #303f9f;
+    transform: scale(1.05);
 }
 
 /* Estilos para los contenedores de gráficos */

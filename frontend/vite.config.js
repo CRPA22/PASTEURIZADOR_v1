@@ -1,15 +1,16 @@
 import { defineConfig } from 'vite';
 
 export default defineConfig({
-    base: '/static/',
+    base: '/',
     build: {
-        outDir: '../backend/src/static',
+        outDir: 'dist',
         emptyOutDir: true,
         assetsDir: 'assets',
         rollupOptions: {
             output: {
-                entryFileNames: 'assets/main.js',
-                assetFileNames: 'assets/main.css'
+                entryFileNames: 'assets/[name].[hash].js',
+                chunkFileNames: 'assets/[name].[hash].js',
+                assetFileNames: 'assets/[name].[hash].[ext]'
             }
         }
     }
