@@ -168,31 +168,48 @@ document.addEventListener('DOMContentLoaded', async () => {
 function downloadCSV(data) {
     // Transformar los datos para ajustar las fechas a UTC-5
     const adjustedData = data.map(point => {
-        // Crear una nueva fecha a partir del timestamp
         const date = new Date(point.time);
-        
-        // Ajustar a UTC-5 (restar 5 horas)
         date.setHours(date.getHours() - 5);
-        
-        // Formatear la fecha en formato local (UTC-5)
         const year = date.getFullYear();
         const month = String(date.getMonth() + 1).padStart(2, '0');
         const day = String(date.getDate()).padStart(2, '0');
         const hours = String(date.getHours()).padStart(2, '0');
         const minutes = String(date.getMinutes()).padStart(2, '0');
         const seconds = String(date.getSeconds()).padStart(2, '0');
-        
         const formattedDate = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
-        
         return {
-            ...point,
-            time: formattedDate
+            time: formattedDate,
+            temp1: point.temp1,
+            temp2: point.temp2,
+            temp3: point.temp3,
+            temp4: point.temp4,
+            flujo1: point.flujo1
         };
     });
 
-    const headers = Object.keys(adjustedData[0]).join(',');
-    const rows = adjustedData.map(d => Object.values(d).join(',')).join('\n');
-    const csv = `${headers}\n${rows}`;
+    // Encabezados personalizados
+    const headers = [
+        'Fecha y Hora',
+        'TSalProducto',
+        'TIngRetenedor',
+        'TSalAguaCaliente',
+        'TSalRetenedor',
+        'Flujo'
+    ];
+
+    // Generar las filas de datos con los nuevos nombres
+    const rows = adjustedData.map(d =>
+        [
+            d.time,
+            d.temp1,
+            d.temp2,
+            d.temp3,
+            d.temp4,
+            d.flujo1
+        ].join(',')
+    );
+
+    const csv = `${headers.join(',')}\n${rows.join('\n')}`;
     const blob = new Blob([csv], { type: 'text/csv' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
