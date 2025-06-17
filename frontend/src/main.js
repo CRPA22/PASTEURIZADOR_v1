@@ -29,6 +29,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const toInput = document.getElementById('toDate');
     const filterBtn = document.getElementById('filterBtn');
     const downloadBtn = document.getElementById('downloadBtn');
+    const updateBtn = document.getElementById('updateBtn');
 
     async function aplicarFiltro() {
         // Mostrar spinner al aplicar filtro
@@ -95,6 +96,35 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     }
 
+    // Función para actualizar los valores
+    async function updateValues() {
+        const newPoint = await fetchLastTelemetryData();
+        console.log("Nuevo punto recibido:", newPoint);
+        console.log("Último timestamp:", lastTimestamp);
+
+        if (newPoint) {
+            // Transformar el nuevo punto al formato esperado
+            const transformedPoint = {
+                temp1: newPoint.temp1.value,
+                temp2: newPoint.temp2.value,
+                temp3: newPoint.temp3.value,
+                temp4: newPoint.temp4.value,
+                flujo1: newPoint.flujo1.value,
+                time: newPoint.temp1.time // Usamos el time de cualquier sensor ya que todos son iguales
+            };
+            
+            if (transformedPoint.time && transformedPoint.time !== lastTimestamp) {
+                console.log("🟢 Detectado nuevo punto");
+                appendTelemetryPoint(transformedPoint);
+                renderCurrentValues(transformedPoint);
+                lastTimestamp = transformedPoint.time;
+                console.log("🟢 Nuevo punto agregado al gráfico y al historial completo.");
+            } else {
+                console.log("🔄 Mismo timestamp, no se actualiza.");
+            }
+        }
+    }
+
     // Funciones para mostrar/ocultar el spinner
     function showLoadingSpinner() {
         document.getElementById('loadingSpinner').style.display = 'flex';
@@ -112,33 +142,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         downloadCSV(filteredData || fullData);
     });
 
-    // Actualización automática cada 1 minuto
-    setInterval(async () => {
-        const newPoint = await fetchLastTelemetryData();
-        console.log("Nuevo punto recibido:", newPoint);
-        console.log("Último timestamp:", lastTimestamp);
-
-        // Transformar el nuevo punto al formato esperado
-        const transformedPoint = {
-            temp1: newPoint.temp1.value,
-            temp2: newPoint.temp2.value,
-            temp3: newPoint.temp3.value,
-            temp4: newPoint.temp4.value,
-            flujo1: newPoint.flujo1.value,
-            time: newPoint.temp1.time // Usamos el time de cualquier sensor ya que todos son iguales
-        };
-        
-        if (newPoint && transformedPoint.time && transformedPoint.time !== lastTimestamp) {
-            console.log("🟢 Detectado nuevo punto");
-            appendTelemetryPoint(transformedPoint);
-            //fullData.push(transformedPoint);  // Agregar el nuevo punto al array completo
-            renderCurrentValues(transformedPoint);
-            lastTimestamp = transformedPoint.time;
-            console.log("🟢 Nuevo punto agregado al gráfico y al historial completo.");
-        } else {
-            console.log("🔄 Mismo timestamp, no se actualiza.");
-        }
-    }, 60000); // cada 60 segundos
+    // Agregar evento click al botón de actualizar
+    updateBtn.addEventListener('click', updateValues);
 
     // Agregar manejo de pestañas
     const tabButtons = document.querySelectorAll('.tab-button');
