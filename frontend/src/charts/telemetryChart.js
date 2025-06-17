@@ -1,4 +1,8 @@
 import Chart from 'chart.js/auto';
+import zoomPlugin from 'chartjs-plugin-zoom';
+
+// Registrar el plugin de zoom
+Chart.register(zoomPlugin);
 
 let temperatureChartInstance = null;
 let flowChartInstance = null;
@@ -25,7 +29,28 @@ export function renderTelemetryChart(data) {
         animation: false,
         layout: {
             padding: {
-                bottom: 20 // Espacio para las etiquetas del eje X
+                bottom: 20
+            }
+        },
+        plugins: {
+            zoom: {
+                pan: {
+                    enabled: true,
+                    mode: 'x',
+                },
+                zoom: {
+                    wheel: {
+                        enabled: true,
+                    },
+                    mode: 'x',
+                }
+            },
+            tooltip: {
+                mode: 'index',
+                intersect: false,
+            },
+            legend: {
+                position: 'top',
             }
         },
         scales: {
@@ -33,6 +58,10 @@ export function renderTelemetryChart(data) {
                 title: {
                     display: true,
                     text: 'Tiempo'
+                },
+                grid: {
+                    display: true,
+                    color: 'rgba(0, 0, 0, 0.1)'
                 }
             },
             y: {
@@ -40,7 +69,11 @@ export function renderTelemetryChart(data) {
                     display: true,
                     text: 'Valor'
                 },
-                beginAtZero: false
+                beginAtZero: false,
+                grid: {
+                    display: true,
+                    color: 'rgba(0, 0, 0, 0.1)'
+                }
             }
         },
         interaction: {
@@ -53,7 +86,8 @@ export function renderTelemetryChart(data) {
     const commonDatasetConfig = {
         pointRadius: 0,
         pointHoverRadius: 0,
-        borderWidth: 2
+        borderWidth: 2,
+        tension: 0.4
     };
 
     // Renderizar gráfico de temperaturas
@@ -68,7 +102,6 @@ export function renderTelemetryChart(data) {
             labels: timeLabels,
             datasets: [
                 {
-                    // Temperatura 1
                     label: 'TSalProducto',
                     data: data.map(item => item.temp1),
                     backgroundColor: 'rgba(255, 99, 132, 0.2)',
@@ -76,7 +109,6 @@ export function renderTelemetryChart(data) {
                     ...commonDatasetConfig
                 },
                 {
-                    // Temperatura 2
                     label: 'TIngRetenedor',
                     data: data.map(item => item.temp2),
                     backgroundColor: 'rgba(54, 162, 235, 0.2)',
@@ -84,7 +116,6 @@ export function renderTelemetryChart(data) {
                     ...commonDatasetConfig
                 },
                 {
-                    // Temperatura 3
                     label: 'TSalAguaCaliente',
                     data: data.map(item => item.temp3),
                     backgroundColor: 'rgba(255, 206, 86, 0.2)',
@@ -92,7 +123,6 @@ export function renderTelemetryChart(data) {
                     ...commonDatasetConfig
                 },
                 {
-                    // Temperatura 4
                     label: 'TSalRetenedor',
                     data: data.map(item => item.temp4),
                     backgroundColor: 'rgba(153, 102, 255, 0.2)',
@@ -128,7 +158,6 @@ export function renderTelemetryChart(data) {
             labels: timeLabels,
             datasets: [
                 {
-                    // Flujo
                     label: 'Flujo',
                     data: data.map(item => item.flujo1),
                     backgroundColor: 'rgba(75, 192, 192, 0.2)',
@@ -151,6 +180,28 @@ export function renderTelemetryChart(data) {
             }
         }
     });
+}
+
+// Función para exportar datos del gráfico
+function exportChartData(chart) {
+    const data = chart.data.datasets.map(dataset => ({
+        label: dataset.label,
+        data: dataset.data
+    }));
+
+    const csvContent = "data:text/csv;charset=utf-8," 
+        + "Tiempo," + data.map(d => d.label).join(",") + "\n"
+        + chart.data.labels.map((label, i) => 
+            label + "," + data.map(d => d.data[i]).join(",")
+        ).join("\n");
+
+    const encodedUri = encodeURI(csvContent);
+    const link = document.createElement("a");
+    link.setAttribute("href", encodedUri);
+    link.setAttribute("download", "datos_grafico.csv");
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
 }
 
 // Función para agregar un punto nuevo

@@ -43,6 +43,7 @@ body {
     box-shadow: 0 4px 8px rgba(0,0,0,0.05);
     padding: 20px;
     margin-bottom: 20px;
+    box-sizing: border-box;
 }
 
 /* Estilo para el encabezado de las tarjetas con flex para alinear título y acciones */
@@ -124,9 +125,14 @@ button:hover {
 /* Estilos para los contenedores de gráficos */
 .chart-container {
     position: relative;
-    height: 500px; /* Altura fija para cada gráfico */
+    height: 500px;
     width: 100%;
     margin-top: 20px;
+    background-color: white;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    box-sizing: border-box;
 }
 
 .chart-container h3 {
@@ -271,5 +277,27 @@ button:hover {
 .update-button:hover {
     background-color: #303f9f;
     transform: scale(1.05);
+}
+
+/* Estilos para los controles del gráfico */
+.chart-controls {
+    margin: 10px 0;
+    display: flex;
+    justify-content: center;
+}
+
+.chart-control-button {
+    background-color: #1a237e;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.3s ease;
+}
+
+.chart-control-button:hover {
+    background-color: #303f9f;
 }
 
