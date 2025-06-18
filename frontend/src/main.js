@@ -11,19 +11,11 @@ function toISO(dateStr) {
 }
 
 document.addEventListener('DOMContentLoaded', async () => {
-    // Mostrar spinner al inicio
-    showLoadingSpinner();
-    
-    let fullData = await fetchTelemetryData(); // data global
+    // Variables globales
+    let fullData = null; // data global - se cargará solo cuando sea necesario
     let filteredData = null; // null = no filtro activo
-
-    renderTelemetryChart(fullData);
-    renderCurrentValues(fullData.at(-1));
-
-    // Ocultar spinner después de cargar
-    hideLoadingSpinner();
-
-    let lastTimestamp = fullData.at(-1)?.time || null;
+    let lastTimestamp = null;
+    let chartInitialized = false; // Flag para saber si el gráfico ya fue inicializado
 
     const fromInput = document.getElementById('fromDate');
     const toInput = document.getElementById('toDate');
@@ -62,7 +54,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
 
         try {
-            // Obtener nuevos datos de la API con el filtro
+            // Obtener datos de la API (con filtro o todos los datos si no hay filtro)
             const newData = await fetchTelemetryData(fromISOString, toISOString);
             
             if (!newData || newData.length === 0) {
@@ -72,7 +64,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             }
 
             // Transformar los datos al formato esperado
-            filteredData = newData.map(point => ({
+            const transformedData = newData.map(point => ({
                 temp1: point.temp1,
                 temp2: point.temp2,
                 temp3: point.temp3,
@@ -81,8 +73,21 @@ document.addEventListener('DOMContentLoaded', async () => {
                 time: point.time
             }));
 
-            renderTelemetryChart(filteredData);
+            // Guardar los datos según si es filtro o datos completos
+            if (fromISOString && toISOString) {
+                filteredData = transformedData;
+            } else {
+                fullData = transformedData;
+            }
+
+            // SÍ renderizar el gráfico cuando se aplica filtro
+            renderTelemetryChart(transformedData);
+            renderCurrentValues(transformedData.at(-1));
             
+            // Actualizar el último timestamp
+            lastTimestamp = transformedData.at(-1)?.time || null;
+            chartInitialized = true;
+
             // Limpiar los inputs
             fromInput.value = '';
             toInput.value = '';
@@ -96,32 +101,86 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     }
 
+    // Función para cargar datos iniciales si no existen
+    async function loadInitialDataIfNeeded() {
+        if (!chartInitialized) {
+            console.log("Cargando datos iniciales...");
+            showLoadingSpinner();
+            
+            try {
+                // Cargar todos los datos históricos
+                const initialData = await fetchTelemetryData();
+                
+                if (!initialData || initialData.length === 0) {
+                    alert('No se pudieron cargar los datos iniciales');
+                    hideLoadingSpinner();
+                    return false;
+                }
+
+                // Transformar los datos al formato esperado
+                fullData = initialData.map(point => ({
+                    temp1: point.temp1,
+                    temp2: point.temp2,
+                    temp3: point.temp3,
+                    temp4: point.temp4,
+                    flujo1: point.flujo1,
+                    time: point.time
+                }));
+
+                // NO renderizar el gráfico, solo guardar los datos
+                // renderTelemetryChart(fullData); // <- COMENTAR ESTA LÍNEA
+                // renderCurrentValues(fullData.at(-1)); // <- COMENTAR ESTA LÍNEA
+                
+                // Actualizar el último timestamp
+                lastTimestamp = fullData.at(-1)?.time || null;
+                chartInitialized = true;
+                
+                hideLoadingSpinner();
+                console.log("Datos iniciales cargados correctamente (sin gráfico)");
+                return true;
+            } catch (error) {
+                console.error('Error al cargar datos iniciales:', error);
+                alert('Error al cargar los datos iniciales. Por favor, intente nuevamente.');
+                hideLoadingSpinner();
+                return false;
+            }
+        }
+        return true;
+    }
+
     // Función para actualizar los valores
     async function updateValues() {
-        const newPoint = await fetchLastTelemetryData();
-        console.log("Nuevo punto recibido:", newPoint);
-        console.log("Último timestamp:", lastTimestamp);
+        // Mostrar spinner mientras se obtienen los datos
+        showLoadingSpinner();
 
-        if (newPoint) {
-            // Transformar el nuevo punto al formato esperado
-            const transformedPoint = {
-                temp1: newPoint.temp1.value,
-                temp2: newPoint.temp2.value,
-                temp3: newPoint.temp3.value,
-                temp4: newPoint.temp4.value,
-                flujo1: newPoint.flujo1.value,
-                time: newPoint.temp1.time // Usamos el time de cualquier sensor ya que todos son iguales
-            };
-            
-            if (transformedPoint.time && transformedPoint.time !== lastTimestamp) {
-                console.log("🟢 Detectado nuevo punto");
-                appendTelemetryPoint(transformedPoint);
+        try {
+            const newPoint = await fetchLastTelemetryData();
+            console.log("Nuevo punto recibido:", newPoint);
+
+            if (newPoint) {
+                // Transformar el nuevo punto al formato esperado
+                const transformedPoint = {
+                    temp1: newPoint.temp1.value,
+                    temp2: newPoint.temp2.value,
+                    temp3: newPoint.temp3.value,
+                    temp4: newPoint.temp4.value,
+                    flujo1: newPoint.flujo1.value,
+                    time: newPoint.temp1.time
+                };
+                
+                // SOLO actualizar las tarjetas de valores actuales
                 renderCurrentValues(transformedPoint);
-                lastTimestamp = transformedPoint.time;
-                console.log("🟢 Nuevo punto agregado al gráfico y al historial completo.");
+                
+                console.log("🟢 Valores actualizados en las tarjetas.");
             } else {
-                console.log("🔄 Mismo timestamp, no se actualiza.");
+                console.log("No se pudieron obtener datos actuales.");
             }
+        } catch (error) {
+            console.error('Error al obtener datos actuales:', error);
+            alert('Error al obtener los datos actuales. Por favor, intente nuevamente.');
+        } finally {
+            // Ocultar spinner
+            hideLoadingSpinner();
         }
     }
 
@@ -138,7 +197,12 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     filterBtn.addEventListener('click', aplicarFiltro);
 
-    downloadBtn.addEventListener('click', () => {
+    downloadBtn.addEventListener('click', async () => {
+        // Verificar si hay datos para descargar
+        if (!fullData && !filteredData) {
+            alert('No hay datos para descargar. Aplique un filtro primero para cargar datos.');
+            return;
+        }
         downloadCSV(filteredData || fullData);
     });
 
@@ -244,8 +308,18 @@ function renderCurrentValues(dataPoint) {
         if (!isNaN(date.getTime())) { // Verificar si la fecha es válida
             // Ajustar a UTC-5
             date.setHours(date.getHours() - 5);
-            // Formato deseado: "Fri Jun 13 2025 10:11:14"
-            const formattedDate = date.toString().split('GMT')[0].trim(); // Remueve la parte de GMT
+            
+            // Formato deseado: "Fri Jun 13 2025 10:11"
+            const formattedDate = date.toLocaleDateString('en-US', {
+                weekday: 'short',
+                month: 'short',
+                day: 'numeric',
+                year: 'numeric'
+            }) + ' ' + date.toLocaleTimeString('en-US', {
+                hour: '2-digit',
+                minute: '2-digit',
+                hour12: false
+            });
 
             lastUpdate.textContent = 'Última actualización: ' + formattedDate;
         } else {
