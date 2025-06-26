@@ -1,6 +1,6 @@
 # 🏭 Sistema de Monitoreo IoT para Pasteurizador Industrial
 
-![Banner del Frontend](./frontend/assets/banner-frontend.png)
+![Banner del Frontend](./frontend/image/banner-frontend.png)
 
 Este proyecto implementa una solución de monitoreo en tiempo real para variables críticas de un proceso de pasteurización industrial. A través de la integración de hardware Siemens, servicios en la nube AWS y un dashboard web, se logra una arquitectura escalable, segura y eficiente.
 
@@ -14,7 +14,7 @@ El sistema recolecta datos desde un **PLC Siemens ET200S** con comunicación MPI
 
 ## 🧠 Arquitectura del Flujo de Datos
 
-![Diagrama del Flujo de Datos](./frontend/assets/arquitectura.png)
+![Diagrama del Flujo de Datos](./frontend/image/arquitectura.png)
 
 1. **Recolección:** El ET200S transmite datos (temperatura y flujo) mediante MPI.
 2. **Conversión:** El IBHLink S7++ convierte MPI a S7 ISO-on-TCP.
@@ -61,11 +61,11 @@ El contenido generado en `dist/` debe subirse a un bucket S3 configurado para ho
 1. Accede a la URL pública distribuida por CloudFront.
 2. Inicia sesión mediante Amazon Cognito.
 
-![Pantalla de Inicio de Sesión](./frontend/assets/login.png)
+![Pantalla de Inicio de Sesión](./frontend/image/login.png)
 
 3. Visualiza las variables del proceso industrial en tiempo real, con opción de filtrar por fechas y descargar CSV.
 
-![Captura del Dashboard](./frontend/assets/dashboard.png)
+![Captura del Dashboard](./frontend/image/dashboard.png)
 
 ---
 
