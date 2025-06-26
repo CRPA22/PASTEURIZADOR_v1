@@ -4,7 +4,31 @@
     <head>
         <meta charset="UTF-8" />
         <title>Ovasur-Pasteurizador</title>
-        <link rel="stylesheet" href="./src/styles/main.css">              
+        <link rel="stylesheet" href="./src/styles/main.css">
+        <script>
+            (function () {
+              const token = localStorage.getItem("access_token");
+          
+              if (!token) {
+                window.location.href = "/";
+                return;
+              }
+          
+              // Decodificar sin librerías externas
+              const payload = JSON.parse(atob(token.split('.')[1]));
+              const exp = payload.exp; // segundos desde época UNIX
+              const now = Math.floor(Date.now() / 1000);
+          
+              if (now > exp) {
+                // Token expirado
+                alert("Sesión expirada. Por favor, vuelve a iniciar sesión.");
+                localStorage.removeItem("access_token");
+                window.location.href = "/";
+              }
+          
+              // Si no expiró, todo bien y sigue cargando
+            })();
+        </script>                
     </head>
     <body>                  
         <div class="container">
