@@ -79,7 +79,7 @@ El contenido generado en `dist/` debe subirse a un bucket S3 configurado para ho
 
 ---
 
-## 📈 Diagrama del Flujo (Mermaid)
+## 📈 Diagrama del Flujo
 
 ```mermaid
 graph TD
